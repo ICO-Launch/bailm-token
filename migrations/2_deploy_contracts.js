@@ -1,5 +1,5 @@
 const Proxy = artifacts.require('./Proxy.sol');
-const Controller = artifacts.require('./Controller.sol');
+const Controller = artifacts.require('./WhitelistAdminToken.sol');
 
 const decimals = 18;
 const supply = 10000000000000;

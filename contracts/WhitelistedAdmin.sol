@@ -4,14 +4,25 @@ import './NAdmin.sol';
 
 contract WhitelistedAdmin is NAdmin {
     string constant WLST_ROLE = "whitelist";
+    bool private whitelistActive;
 
     constructor() public {
         addRole(msg.sender,WLST_ROLE);
+        whitelistActive = true;
     }
 
     modifier onlyWhitelisted() {
-        require(hasRole(msg.sender,WLST_ROLE), "Whitelist rights required.");
+        require(!whitelistActive || hasRole(msg.sender,WLST_ROLE), "Whitelist rights required.");
         _;
+    }
+
+    function getWhitelistActive() view public returns(bool){
+        return whitelistActive;
+    }
+
+    function setWhitelistActive(bool newStatus) onlyRole(ADMIN_ROLE) public {
+        require(whitelistActive!=newStatus);
+        whitelistActive=newStatus;
     }
 
     /**

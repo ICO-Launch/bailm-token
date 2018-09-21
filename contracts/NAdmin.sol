@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-import 'zeppelin-solidity/contracts/ownership/rbac/RBAC.sol';
+import "openzeppelin-solidity/contracts/ownership/rbac/RBAC.sol";
 
 contract NAdmin is RBAC{
     string constant ADMIN_ROLE = "admin";

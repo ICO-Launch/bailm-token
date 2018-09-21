@@ -10,20 +10,40 @@ import "./WhitelistedAdmin.sol";
  **/
 contract WhitelistAdminToken is Controller, WhitelistedAdmin {
 
+    /**
+     * @dev Only whitelisted can transfer tokens, and only to whitelisted addresses
+     * @param _to The address where tokens will be sent to
+     * @param _value The amount of tokens to be sent
+     */
     function transfer(address _to, uint256 _value) public onlyWhitelisted returns(bool) {
-      require(isWhitelisted(_to), "Destination not whitelisted.");
-      return super.transfer(_to, _value);
+        //If the destination is not whitelisted, try to add it (only admins modifier)
+        if(!isWhitelisted(_to)) addToWhitelist(_to);
+        return super.transfer(_to, _value);
     }
 
+    /**
+     * @dev Only whitelisted can transfer tokens, and only to whitelisted addresses. Also, the msg.sender will need to be approved to do it
+     * @param _from The address where tokens will be sent from
+     * @param _to The address where tokens will be sent to
+     * @param _value The amount of tokens to be sent
+     */
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
-      require(isWhitelisted(_from), "Source not whitelisted.");
-      require(isWhitelisted(_to), "Destination not whitelisted.");
-      return super.transferFrom(_from, _to, _value);
+        //If the source is not whitelisted, try to add it (only admins modifier)
+        if(!isWhitelisted(_from)) addToWhitelist(_from);
+        //If the destination is not whitelisted, try to add it (only admins modifier)
+        if(!isWhitelisted(_to)) addToWhitelist(_to);
+        return super.transferFrom(_from, _to, _value);
     }
 
+    /**
+     * @dev Allow others to spend tokens from the msg.sender address. The spender should be whitelisted
+     * @param _spender The address to be approved
+     * @param _value The amount of tokens to be approved
+     */
     function approve(address _spender, uint256 _value) public onlyWhitelisted returns (bool) {
-      require(isWhitelisted(_spender), "Destination not whitelisted.");
-      return super.approve(_spender, _value);
+        //If the approve spender is not whitelisted, try to add it (only admins modifier)
+        if(!isWhitelisted(_spender)) addToWhitelist(_spender);
+        return super.approve(_spender, _value);
     }
 
 }

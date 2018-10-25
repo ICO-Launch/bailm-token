@@ -1,10 +1,12 @@
-pragma solidity ^0.4.18;
+pragma solidity 0.4.24;
 
 
 contract DelegateProxy {
 
+    constructor() public {}
+
     /**
-    * @dev Performs a delegatecall and returns whatever the delegatecall returned (entire context execution will return!)
+    * @dev Performs a delegatecall and returns whatever is returned (entire context execution will return!)
     * @param _dst Destination address to perform the delegatecall
     * @param _calldata Calldata for the delegatecall
     */

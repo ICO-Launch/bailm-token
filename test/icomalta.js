@@ -1,5 +1,5 @@
 const Proxy = artifacts.require('./Proxy.sol');
-const Controller = artifacts.require('./WhitelistAdminToken.sol');
+const Controller = artifacts.require('./BlacklistAutoblockToken.sol');
 //const Controller2 = artifacts.require('./Controller2.sol');
 
 //Use Chai.should for assertion
@@ -8,13 +8,13 @@ const chaiAsPromised = require('chai-as-promised');
 const should = chai.should();
 chai.use(chaiAsPromised);
 
-const name = "Whitelisted Admin ILM token";
-const symbol = "WAILM";
+const name = "Blacklisted Autoblock ILM token";
+const symbol = "BAILM";
 const decimals = 18;
 const initCap = 400000000;
 
-const name2 = "WAILM2";
-const symbol2 = "WAILM2";
+const name2 = "BAILM2";
+const symbol2 = "BAILM2";
 const decimals2 = 16;
 const initCap2 = 500000000;
 
@@ -229,7 +229,7 @@ contract('Proxy', (accounts) => {
             await token.transferOwnership(null, { from: originalOwner }).should.be.rejectedWith('revert');
         });
     });
-
+/*
     describe('Admin privileges check', function () {
         it('owner can add 1 admin', async () => {
             // initialize contract
@@ -550,5 +550,5 @@ contract('Proxy', (accounts) => {
             let balance2 = await token.balanceOf(accounts[2]);
             assert.equal(balance2.toNumber(), 10);
         });
-    });
+    });*/
 });

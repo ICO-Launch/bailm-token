@@ -8,8 +8,8 @@ contract Controller is MintableToken, PausableToken {
     address public thisAddr; // matches delegation slot in proxy
     uint256 public cap;      // the max cap of this token
 
-    string public constant name = "Whitelisted Admin ILM token"; // solium-disable-line uppercase
-    string public constant symbol = "WAILM"; // solium-disable-line uppercase
+    string public constant name = "Blacklisted Autoblock ILM token"; // solium-disable-line uppercase
+    string public constant symbol = "BAILM"; // solium-disable-line uppercase
     uint8 public constant decimals = 18; // solium-disable-line uppercase
 
     constructor() public {}

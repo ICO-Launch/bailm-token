@@ -1,5 +1,5 @@
 const Proxy = artifacts.require('./Proxy.sol');
-const Controller = artifacts.require('./WhitelistAdminToken.sol');
+const Controller = artifacts.require('./BlacklistAutoblockToken.sol');
 
 const decimals = 18;
 const initCap = 10000000000000;

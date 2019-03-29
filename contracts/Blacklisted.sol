@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/ownership/rbac/RBAC.sol";
 
 
 contract Blacklisted is RBAC {
-    string constant WLST_ROLE = "blacklist";
+    string constant BKLST_ROLE = "blacklist";
     bool public blacklistUnlocked;
 
     constructor() public {}
@@ -25,7 +25,7 @@ contract Blacklisted is RBAC {
      */
     function addToBlacklist(address _toAdd) public {
         require(!isBlacklisted(_toAdd), "Address is blacklisted already");
-        addRole(_toAdd,WLST_ROLE);
+        addRole(_toAdd,BKLST_ROLE);
     }
 
     function addListToBlacklist(address[] _toAdd) public {
@@ -36,7 +36,7 @@ contract Blacklisted is RBAC {
 
     function removeFromBlacklist(address _toRemove) public {
         require(isBlacklisted(_toRemove), "Address is not blacklisted");
-        removeRole(_toRemove,WLST_ROLE);
+        removeRole(_toRemove,BKLST_ROLE);
     }
 
     function removeListFromBlacklist(address[] _toRemove) public {
@@ -46,6 +46,6 @@ contract Blacklisted is RBAC {
     }
 
     function isBlacklisted(address _address) public view returns(bool) {
-        return hasRole(_address,WLST_ROLE);
+        return hasRole(_address,BKLST_ROLE);
     }
 }

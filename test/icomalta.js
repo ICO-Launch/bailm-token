@@ -229,292 +229,316 @@ contract('Proxy', (accounts) => {
             await token.transferOwnership(null, { from: originalOwner }).should.be.rejectedWith('revert');
         });
     });
-/*
-    describe('Admin privileges check', function () {
-        it('owner can add 1 admin', async () => {
+
+    describe('Autoblocker privileges check', function () {
+        it('owner can add 1 autoblocker', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToAdmins(accounts[1]);
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
+            await token.addToAutoblockers(accounts[1]);
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
             // can't add him again
-            token.addToAdmins(accounts[1]).should.be.rejectedWith('revert');
+            token.addToAutoblockers(accounts[1]).should.be.rejectedWith('revert');
         });
-        it('owner can add many admin', async () => {
+        it('owner can add many autoblocker', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addListToAdmins([accounts[1],accounts[2]]);
-            let isAdmin1 = await token.isAdmin(accounts[1]);
-            let isAdmin2 = await token.isAdmin(accounts[2]);
-            assert.equal(isAdmin1 && isAdmin2, true);
+            await token.addListToAutoblockers([accounts[1],accounts[2]]);
+            let isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            let isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            assert.equal(isAutoblocker1 && isAutoblocker2, true);
         });
-        it('owner can remove 1 admin', async () => {
+        it('owner can remove 1 autoblocker', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToAdmins(accounts[1]);
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
-            await token.removeFromAdmins(accounts[1]);
-            isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, false);
+            await token.addToAutoblockers(accounts[1]);
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
+            await token.removeFromAutoblockers(accounts[1]);
+            isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, false);
             // can't remove him again
-            token.removeFromAdmins(accounts[1]).should.be.rejectedWith('revert');
+            token.removeFromAutoblockers(accounts[1]).should.be.rejectedWith('revert');
         });
-        it('owner can remove many admin', async () => {
+        it('owner can remove many autoblocker', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addListToAdmins([accounts[1],accounts[2]]);
-            let isAdmin1 = await token.isAdmin(accounts[1]);
-            let isAdmin2 = await token.isAdmin(accounts[2]);
-            assert.equal(isAdmin1 && isAdmin2, true);
-            await token.removeListFromAdmins([accounts[1],accounts[2]]);
-            isAdmin1 = await token.isAdmin(accounts[1]);
-            isAdmin2 = await token.isAdmin(accounts[2]);
-            assert.equal(isAdmin1 || isAdmin2, false);
+            await token.addListToAutoblockers([accounts[1],accounts[2]]);
+            let isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            let isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            assert.equal(isAutoblocker1 && isAutoblocker2, true);
+            await token.removeListFromAutoblockers([accounts[1],accounts[2]]);
+            isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            assert.equal(isAutoblocker1 || isAutoblocker2, false);
         });
-        it('admin can add 1 more admin (non-admin cannot)', async () => {
+        it('autoblocker can add 1 more autoblocker (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToAdmins(accounts[1]);
-            let isAdmin1 = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin1, true);
-            // non-admin can't add second admin
-            await token.addToAdmins(accounts[2], {from: accounts[4]}).should.be.rejectedWith('revert');
-            // admin adds second admin
-            await token.addToAdmins(accounts[2], {from: accounts[1]});
-            let isAdmin2 = await token.isAdmin(accounts[2]);
-            assert.equal(isAdmin2, true);
+            await token.addToAutoblockers(accounts[1]);
+            let isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker1, true);
+            // non-autoblocker can't add second autoblocker
+            await token.addToAutoblockers(accounts[2], {from: accounts[4]}).should.be.rejectedWith('revert');
+            // autoblocker adds second autoblocker
+            await token.addToAutoblockers(accounts[2], {from: accounts[1]});
+            let isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            assert.equal(isAutoblocker2, true);
         });
-        it('admin can add many more admin (non-admin cannot)', async () => {
+        it('autoblocker can add many more autoblocker (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToAdmins(accounts[1]);
-            let isAdmin1 = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin1, true);
-            // non-admin can't add second and third admins
-            await token.addListToAdmins([accounts[2],accounts[3]], {from: accounts[4]}).should.be.rejectedWith('revert');
-            // admin adds second and third admins
-            await token.addListToAdmins([accounts[2],accounts[3]], {from: accounts[1]});
-            let isAdmin2 = await token.isAdmin(accounts[2]);
-            let isAdmin3 = await token.isAdmin(accounts[3]);
-            assert.equal(isAdmin2 && isAdmin3, true);
+            await token.addToAutoblockers(accounts[1]);
+            let isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker1, true);
+            // non-autoblocker can't add second and third autoblockers
+            await token.addListToAutoblockers([accounts[2],accounts[3]], {from: accounts[4]}).should.be.rejectedWith('revert');
+            // autoblocker adds second and third autoblockers
+            await token.addListToAutoblockers([accounts[2],accounts[3]], {from: accounts[1]});
+            let isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            let isAutoblocker3 = await token.isAutoblocker(accounts[3]);
+            assert.equal(isAutoblocker2 && isAutoblocker3, true);
         });
-        it('admin can remove 1 admin (non-admin cannot)', async () => {
+        it('autoblocker can remove 1 autoblocker (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToAdmins(accounts[1]);
-            let isAdmin1 = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin1, true);
-            // admin adds second admin
-            await token.addToAdmins(accounts[2], {from: accounts[1]});
-            let isAdmin2 = await token.isAdmin(accounts[2]);
-            assert.equal(isAdmin2, true);
-            // non-admin can't removeRole
-            await token.removeFromAdmins(accounts[1], {from: accounts[4]}).should.be.rejectedWith('revert');
-            // admin can remove
-            await token.removeFromAdmins(accounts[1], {from: accounts[2]});
-            isAdmin1 = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin1, false);
-            isAdmin2 = await token.isAdmin(accounts[2]);
-            assert.equal(isAdmin2, true);
+            await token.addToAutoblockers(accounts[1]);
+            let isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker1, true);
+            // autoblocker adds second autoblocker
+            await token.addToAutoblockers(accounts[2], {from: accounts[1]});
+            let isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            assert.equal(isAutoblocker2, true);
+            // non-autoblocker can't removeRole
+            await token.removeFromAutoblockers(accounts[1], {from: accounts[4]}).should.be.rejectedWith('revert');
+            // autoblocker can remove
+            await token.removeFromAutoblockers(accounts[1], {from: accounts[2]});
+            isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker1, false);
+            isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            assert.equal(isAutoblocker2, true);
         });
-        it('admin can remove many admin (non-admin cannot)', async () => {
+        it('autoblocker can remove many autoblocker (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToAdmins(accounts[1]);
-            let isAdmin1 = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin1, true);
-            // admin adds second admin
-            await token.addListToAdmins([accounts[2],accounts[3]], {from: accounts[1]});
-            let isAdmin2 = await token.isAdmin(accounts[2]);
-            let isAdmin3 = await token.isAdmin(accounts[3]);
-            assert.equal(isAdmin2 && isAdmin3, true);
-            //non-admin cannot remove
-            await token.removeListFromAdmins([accounts[2],accounts[3]], {from: accounts[4]}).should.be.rejectedWith('revert');
-            // an admin can remove
-            await token.removeListFromAdmins([accounts[2],accounts[3]], {from: accounts[1]});
-            isAdmin2 = await token.isAdmin(accounts[2]);
-            isAdmin3 = await token.isAdmin(accounts[3]);
-            assert.equal(isAdmin2 || isAdmin3, false);
+            await token.addToAutoblockers(accounts[1]);
+            let isAutoblocker1 = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker1, true);
+            // autoblocker adds second autoblocker
+            await token.addListToAutoblockers([accounts[2],accounts[3]], {from: accounts[1]});
+            let isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            let isAutoblocker3 = await token.isAutoblocker(accounts[3]);
+            assert.equal(isAutoblocker2 && isAutoblocker3, true);
+            //non-autoblocker cannot remove
+            await token.removeListFromAutoblockers([accounts[2],accounts[3]], {from: accounts[4]}).should.be.rejectedWith('revert');
+            // an autoblocker can remove
+            await token.removeListFromAutoblockers([accounts[2],accounts[3]], {from: accounts[1]});
+            isAutoblocker2 = await token.isAutoblocker(accounts[2]);
+            isAutoblocker3 = await token.isAutoblocker(accounts[3]);
+            assert.equal(isAutoblocker2 || isAutoblocker3, false);
         });
-        it('admin cannot be added if already admin', async () => {
+        it('autoblocker cannot be added if already autoblocker', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToAdmins(accounts[1]);
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
-            await token.addToAdmins(accounts[1]).should.be.rejectedWith('revert');
+            await token.addToAutoblockers(accounts[1]);
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
+            await token.addToAutoblockers(accounts[1]).should.be.rejectedWith('revert');
         });
     });
 
-    describe('Whitelisting functionality check', function () {
-        it('whitelisting lock is active at deployment', async () => {
+    describe('Blacklisting functionality check', function () {
+        it('blacklisting lock is active at deployment', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            let whitelistStatus = await token.whitelistUnlocked();
-            assert.equal(whitelistStatus, false);
+            let blacklistStatus = await token.blacklistUnlocked();
+            assert.equal(blacklistStatus, false);
         });
-        it('owner can add 1 whitelisted', async () => {
+        it('owner can add 1 blacklisted', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToWhitelist(accounts[1]);
-            let isWLST = await token.isWhitelisted(accounts[1]);
-            assert.equal(isWLST, true);
+            await token.addToBlacklist(accounts[1]);
+            let isBKLST = await token.isBlacklisted(accounts[1]);
+            assert.equal(isBKLST, true);
             // can't add him again
-            token.addToWhitelist(accounts[1]).should.be.rejectedWith('revert');
+            token.addToBlacklist(accounts[1]).should.be.rejectedWith('revert');
         });
-        it('owner can add many whitelisted', async () => {
+        it('owner can add many blacklisted', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addListToWhitelist([accounts[1],accounts[2]]);
-            let isWLST1 = await token.isWhitelisted(accounts[1]);
-            let isWLST2 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST1 && isWLST2, true);
+            await token.addListToBlacklist([accounts[1],accounts[2]]);
+            let isBKLST1 = await token.isBlacklisted(accounts[1]);
+            let isBKLST2 = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST1 && isBKLST2, true);
         });
-        it('owner can remove 1 whitelisted', async () => {
+        it('owner can remove 1 blacklisted', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addToWhitelist(accounts[1]);
-            let isWLST = await token.isWhitelisted(accounts[1]);
-            assert.equal(isWLST, true);
-            //remove from whitelist
-            await token.removeFromWhitelist(accounts[1]);
-            isWLST = await token.isWhitelisted(accounts[1]);
-            assert.equal(isWLST, false);
+            await token.addToBlacklist(accounts[1]);
+            let isBKLST = await token.isBlacklisted(accounts[1]);
+            assert.equal(isBKLST, true);
+            //remove from blacklist
+            await token.removeFromBlacklist(accounts[1]);
+            isBKLST = await token.isBlacklisted(accounts[1]);
+            assert.equal(isBKLST, false);
             // can't remove him again
-            token.removeFromWhitelist(accounts[1]).should.be.rejectedWith('revert');
+            token.removeFromBlacklist(accounts[1]).should.be.rejectedWith('revert');
         });
-        it('owner can remove many whitelisted', async () => {
+        it('owner can remove many blacklisted', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            await token.addListToWhitelist([accounts[1],accounts[2]]);
-            let isWLST1 = await token.isWhitelisted(accounts[1]);
-            let isWLST2 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST1 && isWLST2, true);
-            // remove from whitelist
-            await token.removeListFromWhitelist([accounts[1],accounts[2]]);
-            isWLST1 = await token.isWhitelisted(accounts[1]);
-            isWLST2 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST1 || isWLST2, false);
+            await token.addListToBlacklist([accounts[1],accounts[2]]);
+            let isBKLST1 = await token.isBlacklisted(accounts[1]);
+            let isBKLST2 = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST1 && isBKLST2, true);
+            // remove from blacklist
+            await token.removeListFromBlacklist([accounts[1],accounts[2]]);
+            isBKLST1 = await token.isBlacklisted(accounts[1]);
+            isBKLST2 = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST1 || isBKLST2, false);
         });
-        it('owner/admin can activate/deactivate whitelisting check (non-admin cannot)', async () => {
+        it('owner/autoblocker can activate/deactivate blacklisting check (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            let whitelistStatus = await token.whitelistUnlocked();
-            assert.equal(whitelistStatus, false);
+            let blacklistStatus = await token.blacklistUnlocked();
+            assert.equal(blacklistStatus, false);
             //owner unlock
-            await token.setWhitelistUnlock(true);
-            whitelistStatus = await token.whitelistUnlocked();
-            assert.equal(whitelistStatus, true);
-            //non-admin lock rejection
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, false);
-            await token.setWhitelistUnlock(false, {from: accounts[1]}).should.be.rejectedWith('revert');
-            //add admin
-            await token.addToAdmins(accounts[1]);
-            isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
-            //admin lock
-            await token.setWhitelistUnlock(false, {from: accounts[1]});
-            whitelistStatus = await token.whitelistUnlocked();
-            assert.equal(whitelistStatus, false);
+            await token.setBlacklistUnlock(true);
+            blacklistStatus = await token.blacklistUnlocked();
+            assert.equal(blacklistStatus, true);
+            //non-autoblocker lock rejection
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, false);
+            await token.setBlacklistUnlock(false, {from: accounts[1]}).should.be.rejectedWith('revert');
+            //add autoblocker
+            await token.addToAutoblockers(accounts[1]);
+            isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
+            //autoblocker lock
+            await token.setBlacklistUnlock(false, {from: accounts[1]});
+            blacklistStatus = await token.blacklistUnlocked();
+            assert.equal(blacklistStatus, false);
         });
-        it('admin can add 1 whitelisted (non-admin cannot)', async () => {
+        it('autoblocker can add 1 blacklisted (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, false);
-            //non-admin can't add to whitelist
-            await token.addToWhitelist(accounts[2], {from: accounts[1]}).should.be.rejectedWith('revert');
-            //add to admins
-            await token.addToAdmins(accounts[1]);
-            isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
-            //add whitelisted
-            await token.addToWhitelist(accounts[2], {from: accounts[1]});
-            let isWLST = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST, true);
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, false);
+            //non-autoblocker can't add to blacklist
+            await token.addToBlacklist(accounts[2], {from: accounts[1]}).should.be.rejectedWith('revert');
+            //add to autoblockers
+            await token.addToAutoblockers(accounts[1]);
+            isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
+            //add blacklisted
+            await token.addToBlacklist(accounts[2], {from: accounts[1]});
+            let isBKLST = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST, true);
         });
-        it('admin can add many whitelisted (non-admin cannot)', async () => {
+        it('autoblocker can add many blacklisted (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, false);
-            //non-admin can't add to whitelist
-            await token.addListToWhitelist([accounts[2],accounts[3]], {from: accounts[1]}).should.be.rejectedWith('revert');
-            //add to admins
-            await token.addToAdmins(accounts[1]);
-            isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
-            //add whitelisted
-            await token.addListToWhitelist([accounts[2],accounts[3]], {from: accounts[1]});
-            let isWLST2 = await token.isWhitelisted(accounts[2]);
-            let isWLST3 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST2 && isWLST3, true);
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, false);
+            //non-autoblocker can't add to blacklist
+            await token.addListToBlacklist([accounts[2],accounts[3]], {from: accounts[1]}).should.be.rejectedWith('revert');
+            //add to autoblockers
+            await token.addToAutoblockers(accounts[1]);
+            isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
+            //add blacklisted
+            await token.addListToBlacklist([accounts[2],accounts[3]], {from: accounts[1]});
+            let isBKLST2 = await token.isBlacklisted(accounts[2]);
+            let isBKLST3 = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST2 && isBKLST3, true);
         });
-        it('admin can remove 1 whitelisted (non-admin cannot)', async () => {
+        it('autoblocker can remove 1 blacklisted (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, false);
-            //add to admins
-            await token.addToAdmins(accounts[1]);
-            isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
-            //add whitelisted
-            await token.addToWhitelist(accounts[2], {from: accounts[1]});
-            let isWLST = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST, true);
-            //non-admin can't remove
-            await token.removeFromWhitelist(accounts[2], {from: accounts[4]}).should.be.rejectedWith('revert');
-            //admin can
-            await token.removeFromWhitelist(accounts[2], {from: accounts[1]});
-            isWLST = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST, false);
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, false);
+            //add to autoblockers
+            await token.addToAutoblockers(accounts[1]);
+            isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
+            //add blacklisted
+            await token.addToBlacklist(accounts[2], {from: accounts[1]});
+            let isBKLST = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST, true);
+            //non-autoblocker can't remove
+            await token.removeFromBlacklist(accounts[2], {from: accounts[4]}).should.be.rejectedWith('revert');
+            //autoblocker can
+            await token.removeFromBlacklist(accounts[2], {from: accounts[1]});
+            isBKLST = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST, false);
         });
-        it('admin can remove many whitelisted (non-admin cannot)', async () => {
+        it('autoblocker can remove many blacklisted (non-autoblocker cannot)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
-            let isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, false);
-            //non-admin can't add to whitelist
-            await token.addListToWhitelist([accounts[2],accounts[3]], {from: accounts[1]}).should.be.rejectedWith('revert');
-            //add to whitelist
-            await token.addToAdmins(accounts[1]);
-            isAdmin = await token.isAdmin(accounts[1]);
-            assert.equal(isAdmin, true);
-            //add whitelisted
-            await token.addListToWhitelist([accounts[2],accounts[3]], {from: accounts[1]});
-            let isWLST2 = await token.isWhitelisted(accounts[2]);
-            let isWLST3 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST2 && isWLST3, true);
-            //non-admin can't remove
-            await token.removeListFromWhitelist([accounts[2],accounts[3]], {from: accounts[4]}).should.be.rejectedWith('revert');
-            //admin can
-            await token.removeListFromWhitelist([accounts[2],accounts[3]], {from: accounts[1]});
-            isWLST2 = await token.isWhitelisted(accounts[2]);
-            isWLST3 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST2 || isWLST3, false);
+            let isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, false);
+            //non-autoblocker can't add to blacklist
+            await token.addListToBlacklist([accounts[2],accounts[3]], {from: accounts[1]}).should.be.rejectedWith('revert');
+            //add to blacklist
+            await token.addToAutoblockers(accounts[1]);
+            isAutoblocker = await token.isAutoblocker(accounts[1]);
+            assert.equal(isAutoblocker, true);
+            //add blacklisted
+            await token.addListToBlacklist([accounts[2],accounts[3]], {from: accounts[1]});
+            let isBKLST2 = await token.isBlacklisted(accounts[2]);
+            let isBKLST3 = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST2 && isBKLST3, true);
+            //non-autoblocker can't remove
+            await token.removeListFromBlacklist([accounts[2],accounts[3]], {from: accounts[4]}).should.be.rejectedWith('revert');
+            //autoblocker can
+            await token.removeListFromBlacklist([accounts[2],accounts[3]], {from: accounts[1]});
+            isBKLST2 = await token.isBlacklisted(accounts[2]);
+            isBKLST3 = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST2 || isBKLST3, false);
         });
-        it('whitelisted can transfer (non-whitelisted cannot, unless unlocked)', async () => {
+        it('non-blacklisted can transfer (blacklisted cannot, unless unlocked)', async () => {
             // initialize contract
             await token.initialize(controller.address, 200);
             // give accounts[1] some tokens
             await token.mint(accounts[0], 100);
-            // accounts[1] is not whitelisted at the beginning
-            let isWLST = await token.isWhitelisted(accounts[1]);
-            assert.equal(isWLST, false);
-            // owner can send tokens to it, and that automatically whitelists accounts[1]
+            // accounts[1] is not blacklisted at the beginning
+            let isBKLST = await token.isBlacklisted(accounts[1]);
+            assert.equal(isBKLST, false);
+            // owner can send tokens to it, and it can transfer some to accounts[2]
             await token.transfer(accounts[1], 50);
-            isWLST = await token.isWhitelisted(accounts[1]);
-            assert.equal(isWLST, true);
-            // since accounts[2] is not whitelisted, 1 can't send tokens to 2
-            let isWLST2 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST2, false);
-            await token.transfer(accounts[2],10,{from:accounts[1]}).should.be.rejectedWith('revert');
-            // but it can if whitelisting is unlocked
-            await token.setWhitelistUnlock(true);
+            await token.transfer(accounts[2], 10,{from:accounts[1]})
+            // if we blacklist accounts[1], it can't send anymore
+            await token.addToBlacklist(accounts[1]);
+            isBKLST = await token.isBlacklisted(accounts[1]);
+            assert.equal(isBKLST, true);
+            await token.transfer(accounts[2], 10,{from:accounts[1]}).should.be.rejectedWith('revert');
+            // but it can if blacklisting is unlocked
+            await token.setBlacklistUnlock(true);
             await token.transfer(accounts[2],10,{from:accounts[1]});
+            // check final balances
+            let balance0 = await token.balanceOf(accounts[0]);
+            assert.equal(balance0.toNumber(), 50);
+            let balance1 = await token.balanceOf(accounts[1]);
+            assert.equal(balance1.toNumber(), 30);
+            let balance2 = await token.balanceOf(accounts[2]);
+            assert.equal(balance2.toNumber(), 20);
+        });
+        it('autoblocking functionality check)', async () => {
+            // initialize contract
+            await token.initialize(controller.address, 200);
+            // give accounts[1] some tokens
+            await token.mint(accounts[0], 100);
+            await token.transfer(accounts[1], 50);
+            // make accounts[1] an autoblocker
+            await token.addToAutoblockers(accounts[1]);
+            // accounts[2] is not blacklisted at the beginning
+            let isBKLST = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST, false);
+            // send tokens to accounts[2] from accounts[1]
+            await token.transfer(accounts[2], 10,{from:accounts[1]})
+            // check that is blacklisted originalOwner
+            isBKLST = await token.isBlacklisted(accounts[2]);
+            assert.equal(isBKLST, true);
             // check final balances
             let balance0 = await token.balanceOf(accounts[0]);
             assert.equal(balance0.toNumber(), 50);
@@ -523,32 +547,5 @@ contract('Proxy', (accounts) => {
             let balance2 = await token.balanceOf(accounts[2]);
             assert.equal(balance2.toNumber(), 10);
         });
-        it('check approve and transferFrom under whitelisting', async () => {
-            // initialize contract
-            await token.initialize(controller.address, 200);
-            // give accounts[1] some tokens
-            await token.mint(accounts[0], 100);
-            // accounts[1] is not whitelisted at the beginning
-            let isWLST = await token.isWhitelisted(accounts[1]);
-            assert.equal(isWLST, false);
-            // but when owner approves him to spend, 1 gets autowhitelisted
-            await token.approve(accounts[1], 50);
-            isWLST = await token.isWhitelisted(accounts[1]);
-            assert.equal(isWLST, true);
-            let isWLST2 = await token.isWhitelisted(accounts[2]);
-            assert.equal(isWLST2, false);
-            await token.transferFrom(accounts[0],accounts[2],10,{from:accounts[1]}).should.be.rejectedWith('revert');
-            // but it can after 0 and 2 are whitelisted
-            await token.addToWhitelist(accounts[0]);
-            await token.addToWhitelist(accounts[2]);
-            await token.transferFrom(accounts[0],accounts[2],10,{from:accounts[1]});
-            // check final balances
-            let balance0 = await token.balanceOf(accounts[0]);
-            assert.equal(balance0.toNumber(), 90);
-            let balance1 = await token.balanceOf(accounts[1]);
-            assert.equal(balance1.toNumber(), 0);
-            let balance2 = await token.balanceOf(accounts[2]);
-            assert.equal(balance2.toNumber(), 10);
-        });
-    });*/
+    });
 });
